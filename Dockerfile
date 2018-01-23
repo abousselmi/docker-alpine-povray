@@ -12,7 +12,7 @@ RUN apk add --update --no-cache git \
                                 libpng-dev \
                                 jpeg-dev \
                                 tiff-dev \
-                                openexr-tools \
+                                openexr-dev \
                                 && rm -rf /var/cache/apk/*
 # clone POV-Ray project
 RUN git clone https://github.com/POV-Ray/povray.git

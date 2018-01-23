@@ -1,28 +1,26 @@
 FROM alpine:3.5
 
-# install deps
-RUN apk add --update --no-cache git \
-                                coreutils \
-                                build-base \
-                                autoconf \
-                                automake \
-                                bash \
-                                boost-dev \
-                                zlib-dev \
-                                libpng-dev \
-                                jpeg-dev \
-                                tiff-dev \
-                                openexr-dev \
-                                && rm -rf /var/cache/apk/*
-# clone POV-Ray project
-RUN git clone https://github.com/POV-Ray/povray.git
-
-# run prebuild script
-WORKDIR /povray/unix
-RUN ./prebuild.sh
-
-# compile and install POV-Ray
-WORKDIR /povray
-RUN ./configure COMPILED_BY="abousselmi"
-RUN make
-RUN make install
+# install deps, compile and remove unnecessary stuff
+RUN apk add --update --no-cache \
+            git \
+            coreutils \
+            build-base \
+            boost-dev \
+            zlib-dev \
+            libpng-dev \
+            jpeg-dev \
+            tiff-dev \
+            openexr-dev \
+            autoconf \
+            automake \
+            bash && \
+                git clone https://github.com/POV-Ray/povray.git && \
+                cd /povray/unix && \
+                ./prebuild.sh && \
+                cd /povray && \
+                ./configure COMPILED_BY="abousselmi" && \
+                make && \
+                make install && \
+            apk del build-base autoconf automake && \
+            rm -rf /var/cache/apk/* && \
+            rm -r /povray
